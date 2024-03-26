@@ -46,6 +46,16 @@ public class BoardController {
 		
 	}
 	
+	//  /Board/WriteForm
+	@RequestMapping("/WriteForm")
+	public  ModelAndView   writeForm() {
+		
+		ModelAndView  mv  = new ModelAndView();
+		mv.setViewName("board/write");
+		return mv;	
+		
+	}
+	
 }
 
 

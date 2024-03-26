@@ -30,14 +30,20 @@
      td { 
 	     text-align : center; 
 	     padding : 15px 10px;
-	     background-color :  black;
+	     background-color : #333;
 	     color  : white;
 	     font-weight: bold;
 	     border :1px solid silver;
          
          &:hover  {
 		    background-color : #c0c0c0 ;
-		    color  : black;
+		    color  : white;
+		 }
+		 a {
+		    text-decoration : none;
+		 	display : block; 
+		    width   : 100%; 
+		    color:white;
 		 }
 	  }  
   }
