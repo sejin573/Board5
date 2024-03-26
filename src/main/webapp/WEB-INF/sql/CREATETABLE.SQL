@@ -18,7 +18,18 @@ CREATE   TABLE   TUSER (
    , INDATE      DATE          DEFAULT SYSDATE
 );
 
-
+-- 멀티 게시판 - 구조변경
+DROP    TABLE  BOARD;
+CREATE  TABLE  BOARD (
+	  BNO	       NUMBER(8,0)           PRIMARY  KEY
+	, MENU_ID      VARCHAR2(6)
+	      REFERENCES   MENUS ( MENU_ID )   
+    , TITLE	       VARCHAR2(240 BYTE)    NOT NULL
+    , CONTENT	   VARCHAR2(4000 BYTE)
+    , WRITER	   VARCHAR2(12 BYTE)      
+    , REGDATE	   DATE                  DEFAULT  SYSDATE
+    , HIT	       NUMBER(9,0)           DEFAULT  0  
+);
 
 
 
