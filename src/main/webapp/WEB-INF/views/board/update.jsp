@@ -42,24 +42,24 @@
     
     <%@include file="/WEB-INF/include/menus.jsp" %>
   
-	<h2>게시글 등록</h2>
-	<form action="/Board/Write?menu_id=${ menu_id }" method="POST">
+	<h2>게시글 수정</h2>
+	<form action="/Board/Update" method="POST">
 	<table>
 	 <tr>
 	   <td>제목</td>
-	   <td><input type="text" name="title" /></td>
+	   <td><input type="text" name="title" value="${ vo.title }"/></td>
 	 </tr>
 	 <tr>
 	   <td>작성자</td>
-	   <td><input type="text" name="writer" /></td>
+	   <td><input type="text" name="writer" value="${ vo.writer }"/></td>
 	 </tr>
 	 <tr>
 	   <td>내용</td>
-	   <td><textarea name="content"></textarea></td>
+	   <td><textarea name="content">${ vo.content }</textarea></td>
 	 </tr>	
 	 <tr>
 	   <td colspan="2">
-	    <input type="submit" value="글 쓰기" />
+	    <input type="submit" value="수정" />
 	    <input type="button" value="목록" id="goList" />
 	   </td>
 	 </tr>

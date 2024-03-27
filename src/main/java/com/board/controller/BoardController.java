@@ -1,5 +1,6 @@
 package com.board.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.board.domain.BoardVo;
 import com.board.mapper.BoardMapper;
 import com.board.menus.domain.MenuVo;
 import com.board.menus.mapper.MenuMapper;
+import com.board.user.domain.UserVo;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,10 +37,13 @@ public class BoardController {
 		List<MenuVo>  menuList   =  menuMapper.getMenuList();
 		
 		// 게시물 목록
-		List<BoardVo> boardList  =  boardMapper.getBoardList( menuVo  ); 
+		List<BoardVo> boardList  =  boardMapper.getBoardList( menuVo  );
 		System.out.println( boardList );
 				
+		String menu_id = menuVo.getMenu_id();
+		
 		ModelAndView  mv         =  new ModelAndView();
+		mv.addObject("menu_id", menu_id);
 		mv.addObject("menuList",   menuList );
 		mv.addObject("boardList",  boardList );
 		mv.setViewName("board/list");
@@ -46,17 +51,87 @@ public class BoardController {
 		
 	}
 	
-	//  /Board/WriteForm
+	//  /Board/WriteForm?menu_id=MENU02
 	@RequestMapping("/WriteForm")
-	public  ModelAndView   writeForm() {
+	public  ModelAndView   writeForm(MenuVo menuVo) {
 		
+		String menu_id = menuVo.getMenu_id();
+		List<MenuVo> menuList = menuMapper.getMenuList();
 		ModelAndView  mv  = new ModelAndView();
+		mv.addObject("menuList",menuList);
+		mv.addObject("menu_id",menu_id);
 		mv.setViewName("board/write");
 		return mv;	
 		
 	}
+	@RequestMapping("Write")
+	public ModelAndView write(BoardVo boardVo) {
+		
+		//넘어온 값 저장
+		
+		String menu_id = boardVo.getMenu_id();
+		boardMapper.insertBoard(boardVo);
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("redirect:/Board/List?menu_id="+ menu_id);
+		return mv;
+	}
+	@RequestMapping("View")
+	public ModelAndView view(BoardVo boardVo) {
+
+		List<MenuVo> menuList = menuMapper.getMenuList();
+		
+		boardMapper.incHit(boardVo);
+		
+		
+		HashMap<String, Object> map = boardMapper.getBoard(boardVo);
+		
+		String content = (String) map.get("content");
+		if(content != null) {
+			content           =  content.replace("\n", "<br>");	
+			map.put("content", content);
+		}
+		log.info("map : {}",map);
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("menuList",menuList);
+		mv.addObject("vo", map);
+		mv.setViewName("board/view");
+		return mv;
+	}
+	@RequestMapping("/Delete")
+	public   ModelAndView   delete( BoardVo boardVo ) {
+		
+		// 삭제
 	
+		boardMapper.deleteBoard(boardVo);
+		String menu_id = boardVo.getMenu_id();
+		ModelAndView  mv  = new ModelAndView();
+		mv.setViewName("redirect:/Board/List?menu_id=" + menu_id);
+		return  mv;
+	}
+	@RequestMapping("UpdateForm")
+	public ModelAndView updateForm(BoardVo boardVo) {
+		HashMap<String, Object> map = boardMapper.getBoard(boardVo);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("vo", map);
+		mv.setViewName("board/update");
+		
+		return mv;
+	}
+	@RequestMapping("/Update")
+	public   ModelAndView   update( BoardVo boardVo) {
+		
+		log.info( "boardVo : {}",  boardVo  );
+		// 수정
+		
+		boardMapper.updateBoard( boardVo ); 
+		
+		ModelAndView   mv  =  new ModelAndView();		
+		mv.setViewName("redirect:/Board/List?menu_id=" + menu_id);		
+		return  mv;
+	}
 }
+	
 
 
 
